@@ -1,2 +1,2 @@
-# btt-node-client
-Node client for btt, using websockets to recieve custom events 
+# btt-node-server
+Node server for btt, required for event system to work 
