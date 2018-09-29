@@ -1,5 +1,5 @@
 import * as Express from 'express';
-import { Btt, IBTTConfig } from 'btt';
+import { Btt } from 'btt';
 import { execSync } from 'child_process';
 import * as VM from 'vm';
 
@@ -10,7 +10,8 @@ const router = Express.Router();
 router.post('/dynamic', async (req, res) => {
   const decodedPayload = JSON.parse(Buffer.from(req.body.payload, 'base64').toString('ascii'));
 
-  const bttConfig: IBTTConfig = JSON.parse(decodedPayload.bttConfig);
+  const bttConfig = JSON.parse(decodedPayload.bttConfig);
+
   const remoteCb: string = decodedPayload.cb;
 
   // pass everything we need to the sanbox
@@ -19,7 +20,9 @@ router.post('/dynamic', async (req, res) => {
   };
 
   // create a sanbox
-  VM.createContext(sandbox);
+  await VM.createContext(sandbox);
+
+  new Btt(bttConfig).showNotification({ title: 'Done!', content: 'Callback started'}).invoke();
 
   // console.log((sandbox as any).btt);
   // invoke the requested function
@@ -28,10 +31,11 @@ router.post('/dynamic', async (req, res) => {
     serverResponse = ((${remoteCb}).bind(btt))();
   `;
 
-  VM.runInContext(code, sandbox);
+  await VM.runInContext(code, sandbox);
 
   // return the response
   const result = await (sandbox as any).serverResponse;
+
   res.json(result);
 });
 

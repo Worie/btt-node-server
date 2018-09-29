@@ -16,7 +16,7 @@
     "@types/redis": "^2.8.6",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.3",
-    "btt": "^1.0.4",
+    "btt": "^3.2.1",
     "cheerio": "^1.0.0-rc.2",
     "child_process": "^1.0.2",
     "cors": "^2.8.4",
